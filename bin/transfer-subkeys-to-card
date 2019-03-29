@@ -38,7 +38,7 @@ for i in $(seq 1 $n); do
     subkeyinfo=$(gpg -K --with-colons $keyid | grep '^ssb' | sed -n ${i}p)
     usage=$(keyusage $subkeyinfo)
     validity=$(echo $subkeyinfo | awk -F: '{print $2}')
-    if [ $validity = u ]; then
+    if [ "$validity" == "u" ]; then
         keytocard $keyid $i $usage
     fi
 done

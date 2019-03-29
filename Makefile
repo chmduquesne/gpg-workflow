@@ -30,10 +30,10 @@ add-subkeys:
 	gpg --quick-add-key $(DEFAULTFPR) rsa4096 auth 1m
 
 rev-subkeys:
-	./revoke-all-subkeys $(DEFAULTKEY)
+	./bin/revoke-all-subkeys $(DEFAULTKEY)
 
-transfer-subkeys:
-	./transfer-subkeys-to-card $(DEFAULTKEY)
+keytocard:
+	./bin/transfer-subkeys-to-card $(DEFAULTKEY)
 
 strip-master:
 	gpg --output secret-subkeys.gpg --export-secret-subkeys $(DEFAULTKEY)
