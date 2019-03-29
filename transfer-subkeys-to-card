@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+keyid=$1
+
+keyusage(){
+    use=$(echo "$@" | awk -F: '{print $12}')
+    case "$use" in
+        "s")
+            echo 1
+            ;;
+        "e")
+            echo 2
+            ;;
+        "a")
+            echo 3
+            ;;
+        *)
+            echo "FAIL"
+            ;;
+    esac
+}
+
+keytocard(){
+expect -c "
+spawn gpg --edit-key $1
+send \"key $2\\r\"
+send \"keytocard\\r\"
+send \"$3\r\"
+send \"y\\r\"
+send \"save\\r\"
+interact
+"
+}
+
+n=$(gpg -K --with-colons $keyid | grep '^ssb' | wc -l)
+
+for i in $(seq 1 $n); do
+    subkeyinfo=$(gpg -K --with-colons $keyid | grep '^ssb' | sed -n ${i}p)
+    usage=$(keyusage $subkeyinfo)
+    validity=$(echo $subkeyinfo | awk -F: '{print $2}')
+    if [ $validity = u ]; then
+        keytocard $keyid $i $usage
+    fi
+done
+

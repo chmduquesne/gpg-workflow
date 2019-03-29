@@ -1,0 +1,23 @@
+#!/bin/bash
+
+[ -z $1 ] && exit
+
+revoke_subkey(){
+expect -c "
+spawn gpg --edit-key $1
+send \"key $2\\r\"
+send \"revkey\\r\"
+send \"y\\r\"
+send \"2\\r\"
+send \"\\r\"
+send \"y\\r\"
+send \"save\\r\"
+interact
+"
+}
+
+keyid=$1
+nsubkeys=$(gpg -K $keyid | grep '^ssb' | wc -l)
+for i in $(seq 1 $nsubkeys); do
+    revoke_subkey $keyid $i
+done

@@ -1,3 +1,7 @@
+ifndef UID
+	UID := "Elliot Alderson <ealderson@ecorp.com>"
+endif
+
 ifdef GNUPGHOME
 	CONF := ${GNUPGHOME}/gpg.conf
 else
@@ -18,8 +22,7 @@ import:
 	[ -f gpg.conf ] && cp gpg.conf ${CONF} || true
 
 new-key:
-	#gpg --quick-gen-key $(UID) rsa4096 cert never
-	gpg --full-gen-key
+	gpg --quick-gen-key $(UID) rsa4096 cert never
 
 add-subkeys:
 	gpg --quick-add-key $(DEFAULTFPR) rsa4096 encr 1m
@@ -27,7 +30,10 @@ add-subkeys:
 	gpg --quick-add-key $(DEFAULTFPR) rsa4096 auth 1m
 
 rev-subkeys:
-	#TODO
+	./revoke-all-subkeys $(DEFAULTKEY)
+
+transfer-subkeys:
+	./transfer-subkeys-to-card $(DEFAULTKEY)
 
 strip-master:
 	gpg --output secret-subkeys.gpg --export-secret-subkeys $(DEFAULTKEY)
@@ -51,6 +57,12 @@ new:
 
 renew:
 	$(MAKE) import
+	$(MAKE) rev-subkeys
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
+
+cleanenv:
+	rm -rf gnupg
+	mkdir gnupg
+	chmod 700 gnupg
