@@ -1,20 +1,26 @@
+include config.mk
+
 ifndef UID
-	UID := "Elliot Alderson <ealderson@ecorp.com>"
+$(error "UID not defined.")
+endif
+
+ifndef BACKUPDIR
+$(error "BACKUPDIR not defined.")
 endif
 
 KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
 FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut -d: -f10)
 
-data:
-	mkdir -p data
+backupdir:
+	test -d $(BACKUPDIR)
 
-export: data
-	gpg --export-secret-keys $(KEYID) > data/$(KEYID).gpg
-	gpg --export-ownertrust > data/ownertrust.gpg
+export: backupdir
+	gpg --export-secret-keys $(KEYID) > $(BACKUPDIR)/$(KEYID).gpg
+	gpg --export-ownertrust > $(BACKUPDIR)/ownertrust.gpg
 
-import: data
-	gpg --import data/$(KEYID).gpg
-	gpg --import-ownertrust data/ownertrust.gpg
+import: backupdir
+	gpg --import $(BACKUPDIR)/$(KEYID).gpg
+	gpg --import-ownertrust $(BACKUPDIR)/ownertrust.gpg
 
 new-key:
 	gpg --quick-gen-key $(UID) rsa4096 cert never
@@ -39,10 +45,13 @@ strip-master:
 revoke:
 	gpg --gen-revoke $(KEYID) > revocation.txt
 	gpg --import revocation.txt
-	@echo "\033[0;31mKey revoked! You can now send your revoked key around.\033[0m"
-	@echo "\033[0;31mgpg --keyserver pgp.mit.edu --send-keys $(KEYID)\033[0m"
-	@echo "\033[0;31mgpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)\033[0m"
-	@echo "\033[0;31mgpg --keyserver hkp://pool.sks-keyservers.net --send-key $(KEYID)\033[0m"
+	@echo "\033[0;31mKey revoked! Use 'make publish' to send it around.\033[0m"
+
+publish:
+	keybase pgp update
+	#gpg --keyserver pgp.mit.edu --send-keys $(KEYID)
+	#gpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)
+	#gpg --keyserver hkp://pool.sks-keyservers.net --send-key $(KEYID)
 
 new:
 	$(MAKE) new-key
@@ -56,9 +65,3 @@ renew:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
-
-cleanenv:
-	rm -rf gnupg
-	mkdir gnupg
-	chmod 700 gnupg
-	rm -rf data
