@@ -1,3 +1,6 @@
 script:
+  - gpg --version
+  - sudo apt install gnupg2 -y
+  - gpg --version
   - cp config.mk.example config.mk
   - make test
