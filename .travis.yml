@@ -1,8 +1,8 @@
 dist: xenial
 
-#before_script:
-#  - sudo mv /usr/bin/gpg /usr/bin/gpg1
-#  - sudo update-alternatives --verbose --install /usr/bin/gpg gnupg /usr/bin/gpg2 50
+before_script:
+  - sudo mv /usr/bin/gpg /usr/bin/gpg1
+  - sudo update-alternatives --verbose --install /usr/bin/gpg gnupg /usr/bin/gpg2 50
 
 script:
   - cp config.mk.example config.mk
