@@ -1,2 +1,3 @@
 script:
+  - cp config.mk.example config.mk
   - make test

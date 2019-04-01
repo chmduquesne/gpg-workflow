@@ -12,7 +12,8 @@ KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
 FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut -d: -f10)
 
 backupdir:
-	test -d $(BACKUPDIR)
+	test -d $(BACKUPDIR) || mkdir -p $(BACKUPDIR)
+	test -d $(BACKUPDIR)/.git || git init $(BACKUPDIR)
 
 export: backupdir
 	gpg --export-secret-keys $(KEYID) > $(BACKUPDIR)/$(KEYID).gpg
