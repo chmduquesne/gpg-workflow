@@ -1,11 +1,11 @@
 include config.mk
 
 ifndef UID
-$(error "UID not defined.")
+$(error "UID not defined. Please create config.mk and adapt it to your needs.")
 endif
 
 ifndef BACKUPDIR
-$(error "BACKUPDIR not defined.")
+$(error "BACKUPDIR not defined. Please create config.mk and adapt it to your needs.")
 endif
 
 KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
