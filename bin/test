@@ -3,4 +3,4 @@
 export GNUPGHOME=$(mktemp -d)
 export PATH=bin:$PATH
 
-#make new
+make new

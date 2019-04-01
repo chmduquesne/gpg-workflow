@@ -1,5 +1,9 @@
 include config.mk
 
+ifndef GNUPGHOME
+GNUPGHOME := ${HOME}/.gnupg
+endif
+
 ifndef UID
 $(error "UID not defined. Please create config.mk and adapt it to your needs.")
 endif
@@ -10,6 +14,7 @@ endif
 
 KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
 FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut -d: -f10)
+KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
 
 backupdir:
 	test -d $(BACKUPDIR) || mkdir -p $(BACKUPDIR)
@@ -38,10 +43,7 @@ keytocard:
 	./bin/transfer-subkeys-to-card $(KEYID)
 
 strip-master:
-	gpg --output secret-subkeys.gpg --export-secret-subkeys $(KEYID)
-	gpg --yes --delete-secret-keys $(KEYID)
-	gpg --import secret-subkeys.gpg
-	rm secret-subkeys.gpg
+	rm -f ${GNUPGHOME}/private-keys-v1.d/$(KGRIP).key
 
 revoke:
 	gpg --gen-revoke $(KEYID) > revocation.txt
