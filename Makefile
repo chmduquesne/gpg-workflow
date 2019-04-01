@@ -77,7 +77,7 @@ new:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
-	@echo -e "\033[0;34mYou should now run 'make keystocard'\033[0m"
+	@echo -e "\033[0;34mYou should now run remove your backup, then run 'make keystocard'\033[0m"
 
 renew:
 	$(MAKE) import
@@ -85,4 +85,4 @@ renew:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
-	@echo -e "\033[0;34mYou should now run 'make keystocard'\033[0m"
+	@echo -e "\033[0;34mYou should now run remove your backup, then run 'make keystocard'\033[0m"
