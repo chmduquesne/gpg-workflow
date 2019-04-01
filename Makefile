@@ -50,6 +50,7 @@ rev-subkeys:
 keystocard:
 	@echo -e "\033[0;32mTransferring all valid subkeys to the card\033[0m"
 	./bin/transfer-subkeys-to-card $(KEYID)
+	@echo -e "\033[0;34mYou should now run 'make publish'\033[0m"
 
 strip-master:
 	@echo -e "\033[0;32mRemoving the master secret\033[0m"
@@ -76,6 +77,7 @@ new:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
+	@echo -e "\033[0;34mYou should now run 'make keystocard'\033[0m"
 
 renew:
 	$(MAKE) import
@@ -83,3 +85,4 @@ renew:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
+	@echo -e "\033[0;34mYou should now run 'make keystocard'\033[0m"
