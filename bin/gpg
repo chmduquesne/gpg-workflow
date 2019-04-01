@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /usr/bin/gpg --batch --pinentry-mode loopback --passphrase 'hello' "$@"
