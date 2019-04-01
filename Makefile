@@ -53,6 +53,9 @@ publish:
 	#gpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)
 	#gpg --keyserver hkp://pool.sks-keyservers.net --send-key $(KEYID)
 
+test:
+	./bin/test
+
 new:
 	$(MAKE) new-key
 	$(MAKE) add-subkeys
