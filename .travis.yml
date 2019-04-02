@@ -5,6 +5,6 @@ before_script:
   - sudo update-alternatives --verbose --install /usr/bin/gpg gnupg /usr/bin/gpg2 50
 
 script:
-  - gpg --version
+  - gpg --help
   - cp config.mk.example config.mk
   - make test
