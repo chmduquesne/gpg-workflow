@@ -1,2 +1,33 @@
 #!/bin/bash
-exec /usr/bin/gpg --batch --pinentry-mode loopback --passphrase 'hello' "$@"
+
+# Remove first component from PATH
+export PATH=$(echo $PATH|cut -d: -f2-)
+
+need_passphrase=false
+for arg in $@; do
+    case $arg in
+        "--export-secret-keys")
+            need_passphrase=true
+            ;;
+        "--import")
+            need_passphrase=true
+            ;;
+        "--quick-gen-key")
+            need_passphrase=true
+            ;;
+        "--quick-add-key")
+            need_passphrase=true
+            ;;
+        "--gen-revoke")
+            need_passphrase=true
+            ;;
+        *)
+            ;;
+    esac
+done
+
+if $need_passphrase; then
+    exec gpg --batch --pinentry-mode loopback --passphrase '' "$@"
+else
+    exec gpg "$@"
+fi
