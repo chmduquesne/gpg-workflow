@@ -14,6 +14,7 @@ install:
   - $SH "apt-get install -y locales"
   - $SH "locale-gen en_US.UTF-8"
   - $SH "apt-get install -y build-essential"
+  - $SH "apt-get install -y git"
 
 script:
   - $SH "cp config.mk.example config.mk"
