@@ -1,5 +1,9 @@
 #!/bin/bash
 
+red(){
+    echo -e "\033[0;31m$@\033[0m"
+}
+
 # Remove first component from PATH
 export PATH=$(echo $PATH|cut -d: -f2-)
 
@@ -8,7 +12,8 @@ GPG_MINOR=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f2)
 GPG_PATCH=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f3)
 
 # We need version 2.2.+
-if [ "$GPG_MAJOR" != 2 -o "$GPG_MINOR" != 2 ]; then
+if [ "$GPG_MAJOR" != 2 -o "$GPG_MINOR" -lt 2 ]; then
+    red "This workflow requires gpg 2.2+"
     exit 1
 fi
 
