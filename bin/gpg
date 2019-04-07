@@ -3,6 +3,15 @@
 # Remove first component from PATH
 export PATH=$(echo $PATH|cut -d: -f2-)
 
+GPG_MAJOR=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f1)
+GPG_MINOR=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f2)
+GPG_PATCH=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f3)
+
+# We need version 2.2.+
+if [ "$GPG_MAJOR" != 2 -o "$GPG_MINOR" != 2 ]; then
+    exit 1
+fi
+
 need_passphrase=false
 for arg in $@; do
     case $arg in
