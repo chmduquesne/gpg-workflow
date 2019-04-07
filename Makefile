@@ -17,53 +17,53 @@ FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut 
 KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
 
 backupdir:
-	@echo -e "\033[0;32mMaking sure the backup path is a git directory\033[0m"
+	@./bin/blue "Making sure the backup path is a git directory"
 	test -d $(BACKUPDIR) || mkdir -p $(BACKUPDIR)
 	test -d $(BACKUPDIR)/.git || git init $(BACKUPDIR)
 
 export: backupdir
-	@echo -e "\033[0;32mCreating a backup of the complete key\033[0m"
+	@./bin/blue "Creating a backup of the complete key"
 	gpg --export-secret-keys $(KEYID) > $(BACKUPDIR)/$(KEYID).gpg
 	gpg --export-ownertrust > $(BACKUPDIR)/ownertrust.gpg
 	GIT_DIR=$(BACKUPDIR)/.git GIT_WORK_TREE=$(BACKUPDIR) git add '.'
 	GIT_DIR=$(BACKUPDIR)/.git GIT_WORK_TREE=$(BACKUPDIR) git commit -m "Updating secrets"
 
 import: backupdir
-	@echo -e "\033[0;32mImporting a backup of the complete key\033[0m"
+	@./bin/blue "Importing a backup of the complete key"
 	gpg --import $(BACKUPDIR)/$(KEYID).gpg
 	gpg --import-ownertrust $(BACKUPDIR)/ownertrust.gpg
 
 new-key:
-	@echo -e "\033[0;32mGenerating a new key\033[0m"
+	@./bin/blue "Generating a new key"
 	gpg --quick-gen-key $(UID) rsa4096 cert never
 
 add-subkeys:
-	@echo -e "\033[0;32mGenerating subkeys for encr, sign and auth\033[0m"
+	@./bin/blue "Generating subkeys for encr, sign and auth"
 	gpg --quick-add-key $(FGRPR) rsa4096 encr 1m
 	gpg --quick-add-key $(FGRPR) rsa4096 sign 1m
 	gpg --quick-add-key $(FGRPR) rsa4096 auth 1m
 
 rev-subkeys:
-	@echo -e "\033[0;32mRevoking all subkeys\033[0m"
+	@./bin/blue "Revoking all subkeys"
 	./bin/revoke-all-subkeys $(KEYID)
 
 keystocard:
-	@echo -e "\033[0;32mTransferring all valid subkeys to the card\033[0m"
+	@./bin/blue "Transferring all valid subkeys to the card"
 	./bin/transfer-subkeys-to-card $(KEYID)
-	@echo -e "\033[0;34mYou should now run 'make publish'\033[0m"
+	@./bin/green "You should now run 'make publish'"
 
 strip-master:
-	@echo -e "\033[0;32mRemoving the master secret\033[0m"
+	@./bin/blue "Removing the master secret"
 	rm -f ${GNUPGHOME}/private-keys-v1.d/$(KGRIP).key
 
 revoke:
-	@echo -e "\033[0;32mRevoking the master key\033[0m"
+	@./bin/blue "Revoking the master key"
 	gpg --gen-revoke $(KEYID) > revocation.txt
 	gpg --import revocation.txt
-	@echo "\033[0;31mKey revoked! Use 'make publish' to send it around.\033[0m"
+	@./bin/red "Key revoked! Use 'make publish' to send it around."
 
 publish:
-	@echo -e "\033[0;32mPublishing the key\033[0m"
+	@./bin/blue "Publishing the key"
 	keybase pgp update
 	#gpg --keyserver pgp.mit.edu --send-keys $(KEYID)
 	#gpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)
@@ -77,7 +77,7 @@ new:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
-	@echo -e "\033[0;34mYou should now run remove your backup, then run 'make keystocard'\033[0m"
+	@./bin/green "You should now run remove your backup, then run 'make keystocard'"
 
 renew:
 	$(MAKE) import
@@ -85,4 +85,4 @@ renew:
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	$(MAKE) strip-master
-	@echo -e "\033[0;34mYou should now run remove your backup, then run 'make keystocard'\033[0m"
+	@./bin/green "You should now run remove your backup, then run 'make keystocard'"
