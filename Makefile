@@ -12,6 +12,10 @@ ifndef BACKUPDIR
 $(error "BACKUPDIR not defined. Please create config.mk and adapt it to your needs.")
 endif
 
+ifndef EXPIRE
+EXPIRE := "1m"
+endif
+
 KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
 FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut -d: -f10)
 KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
@@ -39,9 +43,9 @@ new-key:
 
 add-subkeys:
 	@./bin/blue "Generating subkeys for encr, sign and auth"
-	gpg --quick-add-key $(FGRPR) rsa4096 encr 1m
-	gpg --quick-add-key $(FGRPR) rsa4096 sign 1m
-	gpg --quick-add-key $(FGRPR) rsa4096 auth 1m
+	gpg --quick-add-key $(FGRPR) rsa4096 encr $(EXPIRE)
+	gpg --quick-add-key $(FGRPR) rsa4096 sign $(EXPIRE)
+	gpg --quick-add-key $(FGRPR) rsa4096 auth $(EXPIRE)
 
 rev-subkeys:
 	@./bin/blue "Revoking all subkeys"

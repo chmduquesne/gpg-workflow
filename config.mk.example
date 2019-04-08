@@ -1,2 +1,3 @@
 UID := "Elliot Alderson <mrrobot@fs0c13ty.org>"
-BACKUPDIR := "/tmp"
+BACKUPDIR := "/tmp/gpg-backup"
+EXPIRE := "1m"
