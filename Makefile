@@ -32,7 +32,7 @@ export: backupdir
 	GIT_DIR=$(BACKUPDIR)/.git GIT_WORK_TREE=$(BACKUPDIR) git add '.'
 	GIT_DIR=$(BACKUPDIR)/.git GIT_WORK_TREE=$(BACKUPDIR) git commit -m "Updating secrets"
 
-import: backupdir
+import: backupdir remove-all-secrets
 	@./bin/blue "Importing a backup of the complete key"
 	gpg --import $(BACKUPDIR)/$(KEYID).gpg
 	gpg --import-ownertrust $(BACKUPDIR)/ownertrust.gpg
@@ -59,6 +59,11 @@ keystocard:
 strip-master:
 	@./bin/blue "Removing the master secret"
 	rm -f ${GNUPGHOME}/private-keys-v1.d/$(KGRIP).key
+
+remove-all-secrets:
+	@./bin/blue "Removing all secrets"
+	gpg -K --with-colons $(UID) | grep "^grp" | cut -d: -f10 | \
+		xargs -I% echo rm -f ${GNUPGHOME}/private-keys-v1.d/%.key
 
 revoke:
 	@./bin/blue "Revoking the master key"
