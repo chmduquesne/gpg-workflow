@@ -16,8 +16,7 @@ ifndef EXPIRE
 EXPIRE := "1m"
 endif
 
-KEYID = $(shell gpg -K --with-colons $(UID) | grep "^sec" | cut -d: -f5)
-FGRPR = $(shell gpg -K --with-colons $(UID) | grep "^fpr" | grep $(KEYID) | cut -d: -f10)
+KEYID = $(shell gpg -k --with-colons $(UID) | grep "^fpr" | head -n1 | cut -d: -f10)
 KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
 
 backupdir:
@@ -34,7 +33,7 @@ export: backupdir
 
 import: backupdir remove-all-secrets
 	@./bin/blue "Importing a backup of the complete key"
-	gpg --import $(BACKUPDIR)/$(KEYID).gpg
+	gpg --import --import-options restore $(BACKUPDIR)/$(KEYID).gpg
 	gpg --import-ownertrust $(BACKUPDIR)/ownertrust.gpg
 
 new-key:
@@ -43,9 +42,9 @@ new-key:
 
 add-subkeys:
 	@./bin/blue "Generating subkeys for encr, sign and auth"
-	gpg --quick-add-key $(FGRPR) rsa4096 encr $(EXPIRE)
-	gpg --quick-add-key $(FGRPR) rsa4096 sign $(EXPIRE)
-	gpg --quick-add-key $(FGRPR) rsa4096 auth $(EXPIRE)
+	gpg --quick-add-key $(KEYID) rsa4096 encr $(EXPIRE)
+	gpg --quick-add-key $(KEYID) rsa4096 sign $(EXPIRE)
+	gpg --quick-add-key $(KEYID) rsa4096 auth $(EXPIRE)
 
 rev-subkeys:
 	@./bin/blue "Revoking all subkeys"
@@ -63,7 +62,7 @@ strip-master:
 remove-all-secrets:
 	@./bin/blue "Removing all secrets"
 	gpg -K --with-colons $(UID) | grep "^grp" | cut -d: -f10 | \
-		xargs -I% echo rm -f ${GNUPGHOME}/private-keys-v1.d/%.key
+		xargs -I% rm -f ${GNUPGHOME}/private-keys-v1.d/%.key
 
 revoke:
 	@./bin/blue "Revoking the master key"
