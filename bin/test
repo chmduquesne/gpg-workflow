@@ -4,6 +4,8 @@ export GNUPGHOME=$(mktemp -d)
 export PATH=bin:$PATH
 
 make new
+BACKUPDIR=/tmp/gpg-backup2 make export
+BACKUPDIR=/tmp/gpg-backup3 make export
 make strip-master
 
 make renew

@@ -1,3 +1,9 @@
+ifndef UID
 UID := "Elliot Alderson <mrrobot@fs0c13ty.org>"
+endif
+ifndef BACKUPDIR
 BACKUPDIR := "/tmp/gpg-backup"
+endif
+ifndef EXPIRE
 EXPIRE := "1m"
+endif
