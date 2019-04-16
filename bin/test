@@ -4,4 +4,7 @@ export GNUPGHOME=$(mktemp -d)
 export PATH=bin:$PATH
 
 make new
+make strip-master
+
 make renew
+make strip-master
