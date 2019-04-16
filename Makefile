@@ -85,9 +85,9 @@ revoke:
 publish:
 	@./bin/green "Publishing the key"
 	keybase pgp update
-	#gpg --keyserver pgp.mit.edu --send-keys $(KEYID)
-	#gpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)
-	#gpg --keyserver hkp://pool.sks-keyservers.net --send-key $(KEYID)
+	gpg --keyserver pgp.mit.edu --send-keys $(KEYID)
+	gpg --keyserver hkp://keyring.debian.org --send-key $(KEYID)
+	gpg --keyserver hkp://pool.sks-keyservers.net --send-key $(KEYID)
 
 # Run the test suite
 test:
