@@ -1,4 +1,7 @@
 #!/bin/bash
+# Usage: ./revoke-all-subkeys KEYID
+# Revokes all subkeys of the key referenced by KEYID
+
 
 [ -z $1 ] && exit
 
@@ -17,10 +20,16 @@ interact
 }
 
 keyid=$1
+
+# Count the number of subkeys
 nsubkeys=$(gpg -K --with-colons $keyid | grep '^ssb' | wc -l)
+
+# For each subkey
 for i in $(seq 1 $nsubkeys); do
     subkeyinfo=$(gpg -K --with-colons $keyid | grep '^ssb' | sed -n ${i}p)
     validity=$(echo $subkeyinfo | awk -F: '{print $2}')
+
+    # If the key is valid and present, revoke it
     if [ "$validity" == "u" ]; then
         revoke_subkey $keyid $i
     fi

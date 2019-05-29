@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Usage: ./transfer-subkeys-to-card KEYID
+# Transfer all subkeys of the key referenced by KEYID to the card
 
 keyid=$1
 
@@ -32,13 +34,17 @@ interact
 "
 }
 
+# Get the number of subkeys
 n=$(gpg -K --with-colons $keyid | grep '^ssb' | wc -l)
 
+# For each subkey
 for i in $(seq 1 $n); do
     subkeyinfo=$(gpg -K --with-colons $keyid | grep '^ssb' | sed -n ${i}p)
-    usage=$(keyusage $subkeyinfo)
     validity=$(echo $subkeyinfo | awk -F: '{print $2}')
+
+    # If the key is present and valid, put it in the appropriate card slot
     if [ "$validity" == "u" ]; then
+        usage=$(keyusage $subkeyinfo)
         keytocard $keyid $i $usage
     fi
 done
