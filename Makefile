@@ -16,6 +16,13 @@ ifndef EXPIRE
 EXPIRE := "1m"
 endif
 
+ifndef ALGORITHM_PRIM
+ALGORITHM_PRIM := "rsa4096"
+endif
+ifndef ALGORITHM_SUB
+ALGORITHM_SUB := "rsa4096"
+endif
+
 KEYID = $(shell gpg -k --with-colons $(UID) | grep "^fpr" | head -n1 | cut -d: -f10)
 KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
 
@@ -42,14 +49,14 @@ import: backupdir purge-secrets
 # Create a key from scratch
 new-key:
 	@./bin/green "Generating a new key"
-	gpg --quick-gen-key $(UID) rsa4096 cert never
+	gpg --quick-gen-key $(UID) $(ALGORITHM_PRIM) cert never
 
 # Add new encryption/signing/authentication subkeys to the key
 add-subkeys:
 	@./bin/green "Generating subkeys for encr, sign and auth"
-	gpg --quick-add-key $(KEYID) rsa4096 encr $(EXPIRE)
-	gpg --quick-add-key $(KEYID) rsa4096 sign $(EXPIRE)
-	gpg --quick-add-key $(KEYID) rsa4096 auth $(EXPIRE)
+	gpg --quick-add-key $(KEYID) $(ALGORITHM_SUB) encr $(EXPIRE)
+	gpg --quick-add-key $(KEYID) $(ALGORITHM_SUB) sign $(EXPIRE)
+	gpg --quick-add-key $(KEYID) $(ALGORITHM_SUB) auth $(EXPIRE)
 
 # Revoke all the subkeys of the key (reason is "key superseded")
 rev-subkeys:
