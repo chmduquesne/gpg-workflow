@@ -23,15 +23,13 @@ keyusage(){
 }
 
 keytocard(){
-expect -c "
-spawn gpg --edit-key $1
-send \"key $2\\r\"
-send \"keytocard\\r\"
-send \"$3\r\"
-send \"y\\r\"
-send \"save\\r\"
-interact
-"
+    gpg --batch --command-fd 0 --edit-key $1 << EOI
+key $2
+keytocard
+$3
+y
+save
+EOI
 }
 
 # Get the number of subkeys

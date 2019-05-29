@@ -6,17 +6,16 @@
 [ -z $1 ] && exit
 
 revoke_subkey(){
-expect -c "
-spawn gpg --edit-key $1
-send \"key $2\\r\"
-send \"revkey\\r\"
-send \"y\\r\"
-send \"2\\r\"
-send \"\\r\"
-send \"y\\r\"
-send \"save\\r\"
-interact
-"
+    echo "Revoking $1 $2"
+    gpg --batch --command-fd 0 --edit-key $1 << EOI
+key $2
+revkey
+y
+2
+
+y
+save
+EOI
 }
 
 keyid=$1
