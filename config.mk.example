@@ -7,3 +7,9 @@ endif
 ifndef EXPIRE
 EXPIRE := "1m"
 endif
+ifndef ALGORITHM_PRIM
+ALGORITHM_PRIM := "rsa4096"
+endif
+ifndef ALGORITHM_SUB
+ALGORITHM_SUB := "rsa4096"
+endif

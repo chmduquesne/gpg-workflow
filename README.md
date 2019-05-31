@@ -47,9 +47,64 @@ Edit config.mk to suit your needs.
   I use a removable usb stick.
 * `EXPIRE` is how long you want the subkeys to be valid.
 
-Once you are done, you can go ahead and type
+### Full worklow
+Once the configuration has been done, run: 
 
     make new
 
-TODO: give info about what this does
+This will create the new key set including:
+
+- A primary key with Certify attribute
+- A subkey with Authentication attribute
+- A subkey with Encryption attribute
+- A subkey with Signature attribute
+
+The primary key is backed up in the backup directory set in the configuation
+file.
+
+Once the keys have been generated, the primary key may be removed from the
+keyring (recommended) by running:
+
+    make strip-master
+
+The primary secret key can be imported later using 
+
+    make import
+
+After removing the primary key, the subkeys can be moved to a keycard using
+
+    make keystocard
+
+The public key is now ready to be published with 
+
+    make publish
+
+When time comes, the subkeys can be renewed using the target
+
+    make renew
+
+This command will reimport the backed up secret key, revoke the current subkeys
+and generate three new subkeys. The workflow continues with strip-master etc.
+
+In case of theft, or loss of the keys they can be manually revoked using
+
+    make rev-subkeys
+
+In the same way, the master key can be revoked using 
+
+    make revoke
+
+Do not forget to publish your keys after every key creations, or revokations.
+
+#### Todo
+
+Document : 
+
+- export
+- new-key
+- backupdir
+- purge-secrets
+
+
+
 
