@@ -26,6 +26,17 @@ endif
 KEYID = $(shell gpg -k --with-colons $(UID) | grep "^fpr" | head -n1 | cut -d: -f10)
 KGRIP = $(shell gpg -K --with-colons $(UID) | sed -n 3p | cut -d: -f10)
 
+dumpvars:
+	@./bin/green "Showing the variable values"
+	@echo GNUPGHOME = $(GNUPGHOME)
+	@echo UID = $(UID)
+	@echo BACKUPDIR = $(BACKUPDIR)
+	@echo EXPIRE = $(EXPIRE)
+	@echo ALGORITHM_PRIM = $(ALGORITHM_PRIM)
+	@echo ALGORITHM_SUB = $(ALGORITHM_PRIM)
+	@echo KEYID = $(KEYID)
+	@echo KGRIP = $(KGRIP)
+
 # Check that BACKUPDIR exists and is a git repository
 backupdir:
 	@./bin/green "Making sure the backup path is a git directory"
