@@ -24,7 +24,9 @@ would be adapted for this.
 
 ### Creating or renewing the key secrets
 
-There are only 2 commands that you should really care about:
+The only 2 really important targets are `new` and `renew`, because they
+are the starting points of the flow. All commands provide helpful text as
+to what you should do next.
 
     make new
 
@@ -34,9 +36,6 @@ will initialize the key according to the parameters from the file
     make renew
 
 will renew the subkeys of your already existing key.
-
-After typing those commands, the makefile will inform you about the next
-step.
 
 ### Smartcard support
 
