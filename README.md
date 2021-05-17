@@ -22,7 +22,7 @@ would be adapted for this.
 
 ## Workflow
 
-### (re)new
+### Creating/Updating the key
 
 There are only 2 commands that you should really care about:
 
@@ -38,13 +38,13 @@ will renew the subkeys of your already existing key.
 After typing those commands, the makefile will inform you about the next
 step.
 
-### smartcard support
+### Smartcard support
 
 After creating or updating your keypair, you will want to move the secrets
 to a smartcard. This process is guided by the makefile and involves
 multiple steps:
 
-#### backup the full keypair
+#### Backup the full keypair
 
 Mount a usb stick as /path/to/backup, then
 
@@ -53,7 +53,7 @@ Mount a usb stick as /path/to/backup, then
 If necessary, the backup directory is created, and a git repository is
 initialized. Repeat this as many times as desired for multiple backups.
 
-#### remove the secret of the master key
+#### Remove the secret of the master key
 
 Now that you have a backup (possible multiple), remove the keygrip file.
 
