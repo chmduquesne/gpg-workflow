@@ -22,9 +22,7 @@ would be adapted for this.
 
 ## Workflow
 
-### TL;DR
-
-#### Main commands
+### (re)new
 
 There are only 2 commands that you should really care about:
 
@@ -40,7 +38,39 @@ will renew the subkeys of your already existing key.
 After typing those commands, the makefile will inform you about the next
 step.
 
-### File config.mk
+### smartcard support
+
+After creating or updating your keypair, you will want to move the secrets
+to a smartcard. This process is guided by the makefile and involves
+multiple steps:
+
+#### backup the full keypair
+
+Mount a usb stick as /path/to/backup, then
+
+    BACKUPDIR=/path/to/backup make export
+
+If necessary, the backup directory is created, and a git repository is
+initialized. Repeat this as many times as desired for multiple backups.
+
+#### remove the secret of the master key
+
+Now that you have a backup (possible multiple), remove the keygrip file.
+
+    make strip-master
+
+#### Move the subkeys to the smartcard
+
+Finally, plug-in your smartcard, then run
+
+    make keystocard
+
+You will be asked for the admin pin of the smartcard, and the secret to
+the key.
+
+## Details
+
+### config.mk
 
 The file config.mk lets you configure your preference about how the key
 should be maintained.
@@ -54,11 +84,12 @@ Edit it to suit your needs.
   I use a removable usb stick.
 * `EXPIRE` is how long you want the subkeys to be valid.
 
-### Full worklow
+
+### make new
 
     make new
 
-Will create the new key set including:
+will create the new key set including:
 
 - A primary key with Certify attribute
 - A subkey with Authentication attribute
