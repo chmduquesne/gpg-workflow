@@ -22,7 +22,7 @@ would be adapted for this.
 
 ## Workflow
 
-### Creating/Updating the key
+### Creating or renewing the key secrets
 
 There are only 2 commands that you should really care about:
 
