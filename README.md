@@ -20,27 +20,31 @@ to be able to create, version, renew subkeys, transfer them to my
 smartcard with simple commands and sane defaults, and I thought a Makefile
 would be adapted for this.
 
-## Security tradeoffs
-
-In this workflow, I make a few security tradeoffs that are worth
-mentioning.
-
-1. No paper export, because I do not have safe access to a printer
-2. No air gapped computer, because it adds too many moving parts
-
-What I wanted to achieve:
-
-1. The private master key is kept off my devices
-2. The subkeys can be renewed frequently
-3. No interactive choices
-
 ## Workflow
 
-### Initializing the key
+### TL;DR
+
+#### Main commands
+
+There are only 2 commands that you should really care about:
+
+    make new
+
+This will initialize the key according to the parameters you set in config.mk
+
+    make renew
+
+This will renew the subkeys of your already existing key. After typing
+those commands, the makefile will inform you about the next step.
+
+### File config.mk
+
+The file config.mk lets you configure your preference about how the key
+should be maintained.
 
     cp config.mk.example config.mk
 
-Edit config.mk to suit your needs.
+Edit it to suit your needs.
 
 * `UID` should match your primary email and name
 * `BACKUPDIR` is the location where your secrets are going to be saved.
@@ -48,11 +52,10 @@ Edit config.mk to suit your needs.
 * `EXPIRE` is how long you want the subkeys to be valid.
 
 ### Full worklow
-Once the configuration has been done, run: 
 
     make new
 
-This will create the new key set including:
+Will create the new key set including:
 
 - A primary key with Certify attribute
 - A subkey with Authentication attribute
@@ -67,7 +70,7 @@ keyring (recommended) by running:
 
     make strip-master
 
-The primary secret key can be imported later using 
+The primary secret key can be imported later using
 
     make import
 
@@ -75,7 +78,7 @@ After removing the primary key, the subkeys can be moved to a keycard using
 
     make keystocard
 
-The public key is now ready to be published with 
+The public key is now ready to be published with
 
     make publish
 
@@ -90,7 +93,7 @@ In case of theft, or loss of the keys they can be manually revoked using
 
     make rev-subkeys
 
-In the same way, the master key can be revoked using 
+In the same way, the master key can be revoked using
 
     make revoke
 
@@ -98,13 +101,26 @@ Do not forget to publish your keys after every key creations, or revokations.
 
 #### Todo
 
-Document : 
+Document:
 
 - export
 - new-key
 - backupdir
 - purge-secrets
 
+## Security tradeoffs
+
+In this workflow, I make a few security tradeoffs that are worth
+mentioning:
+
+1. No paper export, because I do not have safe access to a printer
+2. No air gapped computer, because it adds too many moving parts
+
+What I wanted to achieve:
+
+1. The private master key is kept off my devices
+2. The subkeys can be renewed frequently
+3. No interactive choices
 
 
 
