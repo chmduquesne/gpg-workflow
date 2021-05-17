@@ -30,12 +30,15 @@ There are only 2 commands that you should really care about:
 
     make new
 
-This will initialize the key according to the parameters you set in config.mk
+will initialize the key according to the parameters from the file
+`config.mk`
 
     make renew
 
-This will renew the subkeys of your already existing key. After typing
-those commands, the makefile will inform you about the next step.
+will renew the subkeys of your already existing key.
+
+After typing those commands, the makefile will inform you about the next
+step.
 
 ### File config.mk
 
