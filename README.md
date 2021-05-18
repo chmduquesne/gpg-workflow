@@ -25,8 +25,8 @@ would be adapted for this.
 ### Creating or renewing the key secrets
 
 The only 2 really important targets are `new` and `renew`, because they
-are the starting points of the flow. All commands provide helpful text as
-to what you should do next.
+are the starting points of the flow. After you execute a target, it
+provides helpful text as to what to do next.
 
     make new
 
@@ -49,12 +49,12 @@ Mount a usb stick as /path/to/backup, then
 
     BACKUPDIR=/path/to/backup make export
 
-If necessary, the backup directory is created, and a git repository is
-initialized. Repeat this as many times as desired for multiple backups.
+If it does not exist already, a git repository is initialized. Repeat this
+as many times as desired for multiple backups.
 
 #### Remove the secret of the master key
 
-Now that you have a backup (possible multiple), remove the keygrip file.
+After making a backup (preferably multiple), remove the keygrip file.
 
     make strip-master
 
@@ -64,12 +64,12 @@ Finally, plug-in your smartcard, then run
 
     make keystocard
 
-You will be asked for the admin pin of the smartcard, and the secret to
-the key.
+You will be asked for the admin pin of the smartcard, and the passphrase
+to the key multiple times.
 
 ## Details
 
-### config.mk
+### File config.mk
 
 The file config.mk lets you configure your preference about how the key
 should be maintained.
@@ -83,6 +83,29 @@ Edit it to suit your needs.
   I use a removable usb stick.
 * `EXPIRE` is how long you want the subkeys to be valid.
 
+### Target dumpvars (default target)
+
+    make [dumpvars]
+
+will let you see all variables use by the Makefile. This lets you make
+sure which keyid is being used, the expiration time, the backup directory,
+etc.
+
+### Target backupdir
+
+    make backupdir
+
+ensures that the directory in the variable BACKUPDIR exists. If it does
+not, the target will attempt to create this directory. If it does not
+contain a .git directory, it will also attempt to initialize a new git
+repository in it.
+
+### Target export
+
+    make export
+
+saves the complete key, secrets and ownertrust in a new commit in the
+BACKUPDIR. This target calls backupdir as a dependency.
 
 ### make new
 
