@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# mock the real gpg for testing purpose
+
 red(){
     echo -e "\033[0;31m$@\033[0m"
 }
 
-# Remove first component from PATH
+# Remove first component from PATH so that we call the real gpg
 export PATH=$(echo $PATH|cut -d: -f2-)
 
 GPG_MAJOR=$(gpg --version | head -n1 | cut -d' ' -f3 | cut -d '.' -f1)

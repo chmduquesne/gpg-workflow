@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export GNUPGHOME=$(mktemp -d)
-export PATH=bin:$PATH
+export PATH=bin/mock:$PATH
 
 make new
 BACKUPDIR=/tmp/gpg-backup2 make export
