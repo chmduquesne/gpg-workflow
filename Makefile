@@ -121,7 +121,8 @@ new:
 
 # Revoke all subkeys and create new ones
 renew:
-	$(MAKE) impomsg green(MAKE) rev-subkeys
+	$(MAKE) import
+	$(MAKE) rev-subkeys
 	$(MAKE) add-subkeys
 	$(MAKE) export
 	@./bin/msg blue "To make another backup, run 'BACKUPDIR=/path/to/backup make export'"
