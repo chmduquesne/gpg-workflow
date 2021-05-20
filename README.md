@@ -6,7 +6,10 @@
 
 As a [pass](https://www.passwordstore.org/) user, I decided to
 [strenghten](https://www.grepular.com/An_NFC_PGP_SmartCard_For_Android) my
-gpg game and use a smartcard in my everyday life.
+gpg game and use a smartcard in my everyday life. My gpg secrets are only
+stored on the smartcard and on offline storage backups. Any decryption
+operation is done via the smartcard, either via usb (computer) or via NFC
+(smartphone).
 
 If you have any experience with gpg, you know that correctly managing a
 keypair is challenging. There are numerous guides about how to create the
@@ -37,11 +40,19 @@ will initialize the key according to the parameters from the file
 
 will renew the subkeys of your already existing key.
 
+
+### Guided workflow
+
+After running any target, the Makefile will provide you with advice on the
+next step. Here is the advice you get after typing make (re)new:
+
+    To make another backup, run 'BACKUPDIR=/path/to/backup make export'
+    Otherwise run 'make strip-master'
+
 ### Smartcard support
 
 After creating or updating your keypair, you will want to move the secrets
-to a smartcard. This process is guided by the makefile and involves
-multiple steps:
+to a smartcard.
 
 #### Backup the full keypair
 
